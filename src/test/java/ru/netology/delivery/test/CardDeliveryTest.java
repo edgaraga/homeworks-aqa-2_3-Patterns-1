@@ -1,7 +1,7 @@
 package ru.netology.delivery.test;
 
-//import com.codeborne.selenide.Configuration;
-//import org.junit.jupiter.api.BeforeAll;
+import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeAll;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -18,12 +18,12 @@ import static java.time.Duration.*;
 
 
 public class CardDeliveryTest {
-    /*
+
     @BeforeAll
     static void setUp() {
         Configuration.headless = true;
     }
-    */
+
     RegistrationByCardInfo info = DataGenerator.Registration.generateByCard("ru", 3, 7);
 
     @Test
