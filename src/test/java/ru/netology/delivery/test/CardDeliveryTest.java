@@ -3,7 +3,7 @@ package ru.netology.delivery.test;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 
-import org.junit.jupiter.api.Disabled;
+//import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
@@ -143,7 +143,7 @@ public class CardDeliveryTest {
         $("[data-test-id=name] .input__sub").shouldHave(text("Поле обязательно для заполнения"));
     }
 
-    @Disabled
+    //@Disabled
     @Test
     void shouldTestWithRussianLetterYoInNameAndSurname() {
         open("http://localhost:9999");
@@ -158,7 +158,7 @@ public class CardDeliveryTest {
         $(".notification__content").shouldBe(visible, ofSeconds(15)).shouldHave(exactText("Встреча успешно запланирована на " + info.getDate()));
     }
 
-    @Disabled
+    //@Disabled
     @Test
     void shouldTestWithIncorrectPhoneNumberTenDigits() {
         open("http://localhost:9999/");
