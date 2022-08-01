@@ -16,57 +16,54 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.time.Duration.*;
 
-
 public class CardDeliveryTest {
+
+    RegistrationByCardInfo info = DataGenerator.Registration.generateByCard("ru");
+    String afterThreeDays = DataGenerator.Registration.generateDate(3);
+    String inFiveDays = DataGenerator.Registration.generateDate(5);
 
     @BeforeAll
     static void setUp() {
         Configuration.headless = true;
     }
 
-    RegistrationByCardInfo info = DataGenerator.Registration.generateByCard("ru", 3, 7);
-
     @Test
     void shouldTestWithCorrectData() {
         open("http://localhost:9999/");
         $("[data-test-id='city'] input").setValue(info.getCity());
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
         $("[class=button__text]").click();
-        $(".notification__content").shouldBe(visible, ofSeconds(15)).shouldHave(exactText("Встреча успешно запланирована на " + info.getDate()));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + afterThreeDays));
     }
 
     @Test
     void shouldTestWithCorrectDataAndRescheduledDate() {
         open("http://localhost:9999/");
         $("[data-test-id='city'] input").setValue(info.getCity());
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
         $("[class=button__text]").click();
-        $(".notification__content").shouldBe(visible, ofSeconds(15)).shouldHave(exactText("Встреча успешно запланирована на " + info.getDate()));
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getChangeDate()));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + afterThreeDays));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(inFiveDays);
         $("[class=button__text]").click();
         $("[data-test-id='replan-notification'] .button__text").shouldBe(visible, ofSeconds(15)).click();
-        $(".notification__content").shouldBe(visible, ofSeconds(15)).shouldHave(exactText("Встреча успешно запланирована на " + info.getChangeDate()));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + inFiveDays));
     }
 
     @Test
     void shouldTestWithAIncorrectCity() {
         open("http://localhost:9999");
         $("[data-test-id=city] input").setValue("Ekaterinburg");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
@@ -78,9 +75,8 @@ public class CardDeliveryTest {
     void shouldTestWithoutCity() {
         open("http://localhost:9999/");
         $("[data-test-id='city'] input").setValue("");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
@@ -92,8 +88,7 @@ public class CardDeliveryTest {
     void shouldTestWithIncorrectDate() {
         open("http://localhost:9999/");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id='date'] input").setValue(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
@@ -106,8 +101,7 @@ public class CardDeliveryTest {
     void shouldTestWithoutDate() {
         open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id='name'] input").setValue(info.getName());
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
@@ -119,9 +113,8 @@ public class CardDeliveryTest {
     void shouldTestWithIncorrectNameAndSurname() {
         open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id=name] input").setValue("Anton Volkov");
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
@@ -133,9 +126,8 @@ public class CardDeliveryTest {
     void shouldTestWithoutNameAndSurname() {
         open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id=name] input").setValue("");
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
@@ -148,14 +140,13 @@ public class CardDeliveryTest {
     void shouldTestWithRussianLetterYoInNameAndSurname() {
         open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(String.valueOf(info.getDate()));
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id=name] input").setValue("Алфёров Сергей");
         $("[data-test-id='phone'] input").setValue(info.getPhone());
         $("[class=checkbox__box]").click();
         $("[class=button__text]").click();
-        $(".notification__content").shouldBe(visible, ofSeconds(15)).shouldHave(exactText("Встреча успешно запланирована на " + info.getDate()));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + afterThreeDays));
     }
 
     //@Disabled
@@ -163,9 +154,8 @@ public class CardDeliveryTest {
     void shouldTestWithIncorrectPhoneNumberTenDigits() {
         open("http://localhost:9999/");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(info.getDate());
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue("Смирнова Мария-Антануетта");
         $("[data-test-id='phone'] input").setValue("+3954001874");
         $("[class=checkbox__box]").click();
@@ -177,9 +167,8 @@ public class CardDeliveryTest {
     void shouldTestWithoutPhoneNumber() {
         open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(info.getDate());
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id='name'] input").setValue("Смирнова Мария-Антануетта");
         $("[data-test-id=phone] input").setValue("");
         $("[class=checkbox__box]").click();
@@ -191,9 +180,8 @@ public class CardDeliveryTest {
     void shouldTestWithoutCheckbox() {
         open("http://localhost:9999");
         $("[data-test-id=city] input").setValue("Екатеринбург");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a");
-        $("[data-test-id='date'] input").sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(info.getDate());
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(afterThreeDays);
         $("[data-test-id=name] input").setValue("Смирнова Мария-Антануетта");
         $("[data-test-id=phone] input").setValue(info.getPhone());
         $("[class=button__text]").click();
